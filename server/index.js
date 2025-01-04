@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.js";
 import catalogueRoutes from "./routes/catalogue.js";
 import categoryRoutes from "./routes/category.js";
 import cookieParser from "cookie-parser";
+import dashboardRoutes from './routes/dashboard.js';
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cors());
 // Define routes
 app.use("/server/auth", authRoutes);
 app.use("/server/catalogue", catalogueRoutes);
+app.use("/server/dashboard", dashboardRoutes);
 app.use("/server/category", categoryRoutes);
 
 app.listen(8800, () => {

@@ -48,7 +48,6 @@ const Catalogues = () => {
                     <thead>
                         <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                             <th className="py-3 px-6 text-left">S.No</th>
-                            <th className="py-3 px-6 text-left">Logo</th>
                             <th className="py-3 px-6 text-left">Catalogue Name</th>
                             <th className="py-3 px-6 text-left">Company Name</th>
                             <th className="py-3 px-6 text-left">Contact Number</th>
@@ -60,13 +59,6 @@ const Catalogues = () => {
                         {catalogues.map((catalog, index) => (
                             <tr key={catalog.id} className="border-b hover:bg-teal-100">
                                 <td className="py-3 px-6 text-left">{index + 1}</td>
-                                <td className="py-3 px-6 text-left">
-                                    <img 
-                                        src={catalog.logo} // Use the full URL to the logo
-                                        alt="Company Logo" 
-                                        style={{ width: "50px", height: "50px", objectFit: "cover" }} 
-                                    />
-                                </td>
                                 <td className="py-3 px-6 text-left">{catalog.catalogue_name}</td>
                                 <td className="py-3 px-6 text-left">{catalog.company_name}</td>
                                 <td className="py-3 px-6 text-left">{catalog.contact_number}</td>

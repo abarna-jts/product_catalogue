@@ -63,7 +63,6 @@ const Categories = () => {
                             <th className="py-3 px-6 text-left">Category Name</th>
                             <th className="py-3 px-6 text-left">Catalogue Name</th>
                             <th className="py-3 px-6 text-center">Actions</th>
-                            
                         </tr>
                     </thead>
                     <tbody className="text-gray-700 text-sm">

@@ -30,7 +30,7 @@ export const createCatalogue = (req, res) => {
       emailAddress,
       contactNumber,
     } = req.body;
-    const logoPath = req.file ? `/uploads/${req.file.filename}` : null;
+    const logoPath = req.file ? req.file.path : null;
 
     const q =
       "INSERT into catalogues (catalogue_owner_id, catalogue_name, company_name, about_company, company_address, email_address, contact_number, logo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

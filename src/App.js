@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 import NewCatalogue from "./pages/userPages/NewCatalogue";
 import CatalogueList from "./pages/userPages/CatalogueList";
 import CategoryList from "./pages/userPages/CategoryList";
-import ProductsList from "./pages/userPages/ProductsList";
+import ProductList from "./pages/userPages/ProductList";
 import { useState } from "react";
 
 const Layout = () => {
@@ -57,8 +57,8 @@ const router = createBrowserRouter([
         element: <CategoryList />,
       },
       {
-        path: "/products",
-        element: <ProductsList />,
+        path: "/category_products",
+        element: <ProductList />,
       },
     ],
   },

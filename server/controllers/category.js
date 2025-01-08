@@ -108,3 +108,15 @@ export const deleteCategory = (req, res) => {
     return res.status(200).json({ message: "Category deleted successfully!" });
   });
 };
+
+
+export const getCategoriesprd = (req, res) => {
+  const query = "SELECT id, category_name FROM categories";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Failed to fetch categories" });
+    }
+    res.status(200).json(results);
+  });
+};

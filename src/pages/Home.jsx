@@ -4,10 +4,12 @@ import { PieChart } from '@mui/x-charts/PieChart';
 
 const Dashboard = () => {
     const [catalogueCount, setCatalogueCount] = useState(0);
+    const [categoryCount, setCategoryCount] = useState(0);
     const [productCount, setProductCount] = useState(0);
     const [recentCatalogue, setRecentCatalogue] = useState(null);
     const [recentCategories, setRecentCategories] = useState(null);
-    const productCounting = 20;
+    const [recentProduct, setRecentProduct] = useState(null);
+    // const productCounting = 20;
     // Fetch catalogue count from backend
     const CountCatalogue = async () => {
         try {
@@ -22,9 +24,19 @@ const Dashboard = () => {
     const CountCategories = async () => {
         try {
             const response = await axios.get('http://localhost:8800/server/dashboard/countCategories');
-            setProductCount(response.data.count); // Assuming response is { count: number }
+            setCategoryCount(response.data.count); // Assuming response is { count: number }
         } catch (error) {
             console.error("Error fetching categories count:", error);
+        }
+    };
+
+    // Fetch products count from backend
+    const CountProduct = async () => {
+        try {
+            const response = await axios.get('http://localhost:8800/server/dashboard/countProducts');
+            setProductCount(response.data.count); // Assuming response is { count: number }
+        } catch (error) {
+            console.error("Error fetching Product count:", error);
         }
     };
 
@@ -48,18 +60,30 @@ const Dashboard = () => {
         }
     };
 
+    const fetchRecentProduct = async () => {
+        try {
+            const response = await axios.get('http://localhost:8800/server/dashboard/recentProducts');
+            setRecentProduct(response.data); // Assuming response is the recent catalogue object
+        } catch (error) {
+            console.error("Error fetching recent product:", error);
+        }
+    };
+
     // Pie chart data (dynamically populated)
     const pieChartData = [
         { id: 0, value: catalogueCount, label: 'Catalogues'},
-        { id: 1, value: productCount, label: 'Categories' },
-        { id: 2, value: 100 - (catalogueCount + productCount), label: 'Other' }, // Example
+        { id: 1, value: categoryCount, label: 'Categories' },
+        { id: 2, value: productCount, label: 'Products' },
+        { id: 3, value: 100 - (catalogueCount + categoryCount + productCount), label: 'Other' }, // Example
     ];
 
     useEffect(() => {
         CountCatalogue(); // Call the function to get catalogue count
         CountCategories(); // Call the function to get category count
+        CountProduct(); // Call the function to get product count
         fetchRecentCatalogue(); // Call the function to get recent catalogue
         fetchRecentCategories(); //call the function to get recent categories
+        fetchRecentProduct(); //call the function to get recent products
     }, []);
 
     const CounterCircle = ({ count }) => {
@@ -109,12 +133,12 @@ const Dashboard = () => {
 
                 <div className="bg-white shadow rounded-lg p-6 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-gray-700">Total Categories</h2>
-                    <CounterCircle count={productCount} />
+                    <CounterCircle count={categoryCount} />
                 </div>
 
                 <div className="bg-white shadow rounded-lg p-6 flex justify-between items-center">
                     <h2 className="text-xl font-bold text-gray-700">Total Products</h2>
-                    <CounterCircle count={productCounting} />
+                    <CounterCircle count={productCount} />
                 </div>
 
 
@@ -123,7 +147,7 @@ const Dashboard = () => {
             <div className="data-items flex justify-around">
                 <div className="recent-class flex flex-col w-3/5 mx-5">
                     {/* Most Recent Catalogue */}
-                    <div className="bg-white shadow rounded-lg p-6 my-8 w-full">
+                    <div className="bg-white shadow rounded-lg p-6 my-4 w-full">
                         <h2 className="text-xl font-bold text-gray-700 mb-4" style={{ color: "rgb(0 121 107)" }}>Most Recent Catalogue</h2>
                         {recentCatalogue ? (
                             <table className="w-full text-left border-collapse border border-gray-300">
@@ -157,7 +181,7 @@ const Dashboard = () => {
                     </div>
 
                     {/* Most Recent categories */}
-                    <div className="bg-white shadow rounded-lg p-6 my-8 w-full">
+                    <div className="bg-white shadow rounded-lg p-6 my-4 w-full">
                         <h2 className="text-xl font-bold text-gray-700 mb-4 " style={{ color: "rgb(0 121 107)" }}>Most Recent Categories</h2>
                         {recentCategories ? (
                             <table className="w-full text-left border-collapse border border-gray-300">
@@ -187,7 +211,39 @@ const Dashboard = () => {
                             <p className="text-gray-400">Loading recent catalogue...</p>
                         )}
                     </div>
+                    {/* Most Recent Products */}
+                <div className="bg-white shadow rounded-lg p-6 my-4 w-full">
+                        <h2 className="text-xl font-bold text-gray-700 mb-4 " style={{ color: "rgb(0 121 107)" }}>Most Recent Product</h2>
+                        {recentProduct ? (
+                            <table className="w-full text-left border-collapse border border-gray-300">
+                                <thead>
+                                    <tr>
+                                        <th className="border border-gray-300 px-4 py-2">S.No</th>
+                                        <th className="border border-gray-300 px-4 py-2">Product Name</th>
+                                        <th className="border border-gray-300 px-4 py-2">Product Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td className="border border-gray-300 px-4 py-2">1</td>
+                                        {/* <td className="border border-gray-300 px-4 py-2">
+                                    <img
+                                        src={`http://localhost:8800/${recentCatalogue.logo}`}
+                                        alt="Logo"
+                                        className="w-16 h-16"
+                                    />
+                                </td> */}
+                                        <td className="border border-gray-300 px-4 py-2">{recentProduct.products_name}</td>
+                                        <td className="border border-gray-300 px-4 py-2">{recentProduct.product_detail}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p className="text-gray-400">Loading recent products...</p>
+                        )}
+                    </div>
                 </div>
+                
                 {/* Pie Chart Section */}
                 <div className="bg-white shadow rounded-lg p-6 mt-8 w-2/5 text-center mx-5">
                     <h2 className="text-xl font-bold text-gray-700 mb-4" style={{ color: "rgb(0 121 107)" }}>Catalogue & Categories Distribution</h2>
@@ -195,14 +251,14 @@ const Dashboard = () => {
                         series={[{ data: pieChartData }]}
                         width={400}
                         height={300}
-                        colors={['#5cb2a8', '#2dd4bf', '#00796b']}
+                        colors={['#5cb2a8', '#2dd4bf', '#40ffe8', '#00796b',]}
                     />
 
                     {/* Legend Section */}
                     <div style={{ marginTop: 20 }} className='flex justify-around'>
                         {pieChartData.map((item) => (
                         <div key={item.id} style={{ marginBottom: '8px' }}>
-                            <span style={{ fontWeight: 'bold', color: item.label === 'Catalogues' ? 'rgb(92 178 168)' : item.label === 'Categories' ? 'rgb(45 212 191)' : '#00796b' }}>
+                            <span style={{ fontWeight: 'bold', color: item.label === 'Catalogues' ? 'rgb(92 178 168)' : item.label === 'Categories' ? 'rgb(45 212 191)' : item.label === 'Products' ? '#40ffe8' : '#00796b' }}>
                             {item.label}:
                             </span> 
                             <span>{` ${item.value}`}</span>

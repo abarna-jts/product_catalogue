@@ -4,7 +4,7 @@ import mysql from "mysql"
     host: "localhost",
     user: "root",
     password: "",
-    database: "catalogue_db"
+    database: "prd_catalogue"
 });
 
 export default db;

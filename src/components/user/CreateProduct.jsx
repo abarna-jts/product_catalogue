@@ -4,11 +4,29 @@ import axios from 'axios';
 const CreateProduct = ({ isOpen, onClose, refresh }) => {
   const modalRef = useRef(null);
 
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     products_name: '',
     product_detail: '',
     product_amount: '',
+    category_id: '', // New field for category
   });
+
+  // Fetch categories when the modal opens
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:8800/server/category/categories');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    if (isOpen) {
+      fetchCategories();
+    }
+  }, [isOpen]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +38,7 @@ const CreateProduct = ({ isOpen, onClose, refresh }) => {
     try {
       const response = await axios.post("http://localhost:8800/server/product/create_product", formData);
       alert('Product added successfully!');
-      setFormData({ products_name: '', product_detail: '', product_amount: '' });
+      setFormData({ products_name: '', product_detail: '', product_amount: '', category_id: '' });
       
       onClose();
     } catch (error) {
@@ -32,18 +50,19 @@ const CreateProduct = ({ isOpen, onClose, refresh }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isOpen && modalRef.current && !modalRef.current.contains(event.target)) {
-        refresh();
-        onClose();
         
+          refresh(); 
+        
+        onClose();
       }
     };
-
+  
     document.addEventListener('mousedown', handleClickOutside);
-
+  
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, refresh]); // Include refresh in dependencies
 
   return (
     <div>
@@ -99,7 +118,24 @@ const CreateProduct = ({ isOpen, onClose, refresh }) => {
                 />
               </label>
             </div>
-
+            {/* Existing fields */}
+              <label className="block w-full p-1">
+                <span className="text-gray-700">Category</span>
+                <select
+                  name="category_id"
+                  className="w-full p-2 border rounded mt-1"
+                  value={formData.category_id}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select a Category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.category_name}
+                    </option>
+                  ))}
+                </select>
+              </label>
             <button
               type="submit"
               className="mt-4 w-full bg-teal-500 text-white py-2 rounded"

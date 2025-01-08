@@ -73,8 +73,8 @@ const Categories = () => {
                                 <td className="py-3 px-6 text-left">{category.category_name}</td>
                                 <td className="py-3 px-6 text-left">{category.catalogue_name}</td>
                                 <td className="py-3 px-6 text-left">
-                                    <button className="bg-teal-500 hover:bg-teal-700 text-white px-3 py-1 rounded mr-2"
-                                    onClick={() => navigate('/category_products', { state: { categoryId: category.id } })}
+                                    <button className="bg-green-600 hover:bg-teal-700 text-white px-3 py-1 rounded mr-2"
+                                     onClick={() => navigate('/category_products', { state: { categoryId: category.id } })}
                                     >View Products
 
                                     </button>

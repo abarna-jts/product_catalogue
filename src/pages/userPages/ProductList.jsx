@@ -15,7 +15,6 @@ const ProductList = () => {
     const navigate = useNavigate();
     const { categoryId } = location.state || {};
 
-    // Move the fetchProducts function outside of useEffect
     const fetchProducts = async () => {
         try {
             const response = await axios.get(
@@ -41,76 +40,74 @@ const ProductList = () => {
     return (
         <div>
             <main className="p-8 mt-10 sm:mt-14">
-                <div className="flex justify-between">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-700">Products for Category</h1>
-                    
+                    <div>
+                        <button
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+                            onClick={() => navigate(-1)}
+                        >
+                            Back to Categories
+                        </button>
+                        <button
+                            className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg ml-4"
+                            onClick={() => setIsCreateModalOpen(true)}
+                        >
+                            Add New Product
+                        </button>
+                    </div>
                 </div>
-                <div className="flex mb-4 items-center">
-                    <button
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-                        onClick={() => navigate(-1)} // Go back to the previous page
-                    >
-                        Back to Categories
-                    </button>
-                    <button
-                        className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg ml-4"
-                        onClick={() => setIsCreateModalOpen(true)}
-                    >
-                        Add New Product
-                    </button>
+
+                {/* Product Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                    {products.map((product, index) => (
+                        <div
+                            key={product.id}
+                            className="bg-white shadow-md rounded-lg overflow-hidden"
+                        >
+                            <img
+                                src={`http://localhost:8800/${product.logo}`}
+                                alt="Product Logo"
+                                className="w-full h-90 object-cover p-4"
+                            />
+                            <div className="p-4">
+                                <h2 className="text-lg font-semibold text-gray-800">
+                                    {product.products_name}
+                                </h2>
+                                <p className="text-gray-600 text-sm mt-2">
+                                    {product.product_detail}
+                                </p>
+                                <p className="text-gray-500 text-sm mt-1">
+                                    Category: {product.category_name}
+                                </p>
+                                <p className="font-bold mt-3 " style={{color:"rgb(0 121 107)"}}>
+                                    ₹ {product.product_amount}
+                                </p>
+                                <div className="flex justify-between mt-4">
+                                    <button
+                                        className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                                        onClick={() => {
+                                            setSelectedProduct(product);
+                                            setIsEditModalOpen(true);
+                                        }}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded"
+                                        onClick={() => {
+                                            setSelectedProduct(product);
+                                            setIsDeleteModalOpen(true);
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-                </div>
-                
-                
-                <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white shadow rounded-lg overflow-hidden">
-                        <thead>
-                            <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                                <th className="py-3 px-6 text-left">S.No</th>
-                                <th className="py-3 px-6 text-left">Product Name</th>
-                                <th className="py-3 px-6 text-left">Product Detail</th>
-                                <th className="py-3 px-6 text-left">Category Name</th>
-                                <th className="py-3 px-6 text-left">Price</th>
-                                <th className="py-3 px-6 text-center">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-gray-700 text-sm">
-                            {products.map((product, index) => (
-                                <tr
-                                    key={product.id}
-                                    className="border-b hover:bg-teal-100"
-                                >
-                                    <td className="py-3 px-6 text-left">{index + 1}</td>
-                                    <td className="py-3 px-6 text-left">{product.products_name}</td>
-                                    <td className="py-3 px-6 text-left">{product.product_detail}</td>
-                                    <td className="py-3 px-6 text-left">{product.category_name}</td>
-                                    <td className="py-3 px-6 text-left">{product.product_amount}</td>
-                                    <td className="py-3 px-6 text-center">
-                                        <button
-                                            className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded mr-2"
-                                            onClick={() => {
-                                                setSelectedProduct(product);
-                                                setIsEditModalOpen(true);
-                                            }}
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded"
-                                            onClick={() => {
-                                                setSelectedProduct(product);
-                                                setIsDeleteModalOpen(true);
-                                            }}
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+
                 {isCreateModalOpen && (
                     <CreateProduct
                         isOpen={isCreateModalOpen}
@@ -123,16 +120,15 @@ const ProductList = () => {
                         isOpen={isEditModalOpen}
                         onClose={() => setIsEditModalOpen(false)}
                         product={selectedProduct}
-                        refresh={fetchProducts} // Refresh product list after edit
+                        refresh={fetchProducts}
                     />
                 )}
-
                 {isDeleteModalOpen && (
                     <DeleteProduct
                         isOpen={isDeleteModalOpen}
                         onClose={() => setIsDeleteModalOpen(false)}
                         productID={selectedProduct?.id}
-                        refresh={fetchProducts} // Refresh product list after delete
+                        refresh={fetchProducts}
                     />
                 )}
             </main>

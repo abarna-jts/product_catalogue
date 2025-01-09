@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 const EditProduct = ({ isOpen, onClose, product, refresh }) => {
   const [productName, setProductName] = useState("");
   const [productDetail, setProductDetail] = useState("");
-  const [product_amount, setPrice] = useState("");
-
+  const [productAmount, setProductAmount] = useState("");
+  const [productLogo, setProductLogo] = useState(null); // For storing the file
   const modalRef = useRef(null);
 
   const handleClickOutside = (event) => {
@@ -16,17 +16,16 @@ const EditProduct = ({ isOpen, onClose, product, refresh }) => {
 
   useEffect(() => {
     if (isOpen) {
-      console.log("Current Product:", product); // Debugging the product object
       document.addEventListener("mousedown", handleClickOutside);
       if (product) {
-        setProductName(product.products_name || ""); // Corrected key: products_name
+        setProductName(product.products_name || "");
         setProductDetail(product.product_detail || "");
-        setPrice(product.product_amount || ""); // Corrected key: product_amount
+        setProductAmount(product.product_amount || "");
       }
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
-  
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -34,20 +33,28 @@ const EditProduct = ({ isOpen, onClose, product, refresh }) => {
 
   const handleProductEdit = async (e) => {
     e.preventDefault();
-  
+
     if (!product || !product.id) {
       console.error("Product is undefined or missing an ID.");
       return;
     }
-  
+
+    const formData = new FormData();
+    formData.append("product_id", product.id); // Backend expects product_id
+    formData.append("products_name", productName);
+    formData.append("product_detail", productDetail);
+    formData.append("product_amount", productAmount);
+    if (productLogo) {
+      formData.append("logo", productLogo); // Attach logo file
+    }
+
     try {
-      await axios.post("http://localhost:8800/server/product/edit_product", {
-        product_id: product.id, // Ensure it matches with backend
-        products_name: productName, // Ensure it matches with backend
-        product_detail: productDetail, // Ensure it matches with backend
-        product_amount: product_amount,
+      await axios.post("http://localhost:8800/server/product/edit_product", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-      
+
       onClose();
       refresh(); // Refresh the product list after editing
     } catch (error) {
@@ -55,6 +62,7 @@ const EditProduct = ({ isOpen, onClose, product, refresh }) => {
       alert("Error updating product");
     }
   };
+
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 ${
@@ -105,9 +113,19 @@ const EditProduct = ({ isOpen, onClose, product, refresh }) => {
                 type="number"
                 className="w-full p-2 border rounded mt-1"
                 placeholder="Enter price"
-                value={product_amount}
-                onChange={(e) => setPrice(e.target.value)}
+                value={productAmount}
+                onChange={(e) => setProductAmount(e.target.value)}
                 required
+              />
+            </label>
+          </div>
+          <div>
+            <label className="block">
+              <span className="text-gray-700">Product Logo</span>
+              <input
+                type="file"
+                className="w-full p-2 border rounded mt-1"
+                onChange={(e) => setProductLogo(e.target.files[0])}
               />
             </label>
           </div>

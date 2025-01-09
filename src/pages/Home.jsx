@@ -113,7 +113,7 @@ const Dashboard = () => {
                     {/* Background Circle in Gray */}
                     <circle cx="60" cy="60" r="54" stroke="#F3F3F3" strokeWidth="4" fill="none" />
                     {/* Progress Circle */}
-                    <circle cx="60" cy="60" r="54" stroke="#1b8a6b" strokeWidth="4" fill="none" strokeDasharray="339.292" strokeDashoffset={(339.292 * (1 - count / 30))} />
+                    <circle cx="60" cy="60" r="54" stroke="#1b8a6b" strokeWidth="4" fill="none" strokeDasharray="339.292" strokeDashoffset={(339.292 * (1 - count / 50))} />
                 </svg>
                 <span className="relative z-10">{displayCount}</span>
             </p>
@@ -145,7 +145,7 @@ const Dashboard = () => {
             </div>
 
             <div className="data-items flex justify-around">
-                <div className="recent-class flex flex-col w-3/5 mx-5">
+                <div className="recent-class flex flex-col w-3/5 mr-5">
                     {/* Most Recent Catalogue */}
                     <div className="bg-white shadow rounded-lg p-6 my-4 w-full">
                         <h2 className="text-xl font-bold text-gray-700 mb-4" style={{ color: "rgb(0 121 107)" }}>Most Recent Catalogue</h2>
@@ -212,7 +212,7 @@ const Dashboard = () => {
                         )}
                     </div>
                     {/* Most Recent Products */}
-                <div className="bg-white shadow rounded-lg p-6 my-4 w-full">
+                    <div className="bg-white shadow rounded-lg p-6 my-4 w-full">
                         <h2 className="text-xl font-bold text-gray-700 mb-4 " style={{ color: "rgb(0 121 107)" }}>Most Recent Product</h2>
                         {recentProduct ? (
                             <table className="w-full text-left border-collapse border border-gray-300">
@@ -245,7 +245,7 @@ const Dashboard = () => {
                 </div>
                 
                 {/* Pie Chart Section */}
-                <div className="bg-white shadow rounded-lg p-6 mt-8 w-2/5 text-center mx-5">
+                <div className="bg-white shadow rounded-lg p-6 mt-8 w-2/5 text-center ml-5">
                     <h2 className="text-xl font-bold text-gray-700 mb-4" style={{ color: "rgb(0 121 107)" }}>Catalogue & Categories Distribution</h2>
                     <PieChart
                         series={[{ data: pieChartData }]}

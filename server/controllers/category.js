@@ -120,3 +120,16 @@ export const getCategoriesprd = (req, res) => {
     res.status(200).json(results);
   });
 };
+
+export const getallCategory = (req, res) => {
+  
+
+  const query = "Select * from categories";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching products", err.sqlMessage || err.message);
+      return res.status(500).json({ message: "Server error", error: err });
+    }
+    res.json(results);
+  });
+};

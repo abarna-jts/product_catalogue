@@ -9,6 +9,7 @@ const CreateProduct = ({ isOpen, onClose, refresh }) => {
     products_name: '',
     product_detail: '',
     product_amount: '',
+    product_logo: null,
     category_id: '', // New field for category
   });
 
@@ -35,17 +36,41 @@ const CreateProduct = ({ isOpen, onClose, refresh }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formDataToSend = new FormData();
+
+    // Append all form fields to FormData
+    formDataToSend.append("products_name", formData.products_name);
+    formDataToSend.append("product_detail", formData.product_detail);
+    formDataToSend.append("product_amount", formData.product_amount);
+    formDataToSend.append("category_id", formData.category_id);
+    formDataToSend.append("logo", formData.product_logo); // Add the file
+
     try {
-      const response = await axios.post("http://localhost:8800/server/product/create_product", formData);
-      alert('Product added successfully!');
-      setFormData({ products_name: '', product_detail: '', product_amount: '', category_id: '' });
-      
+      const response = await axios.post(
+        "http://localhost:8800/server/product/create_product",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      alert("Product added successfully!");
+      setFormData({
+        products_name: "",
+        product_detail: "",
+        product_amount: "",
+        product_logo: null,
+        category_id: "",
+      });
       onClose();
     } catch (error) {
-      console.error('Failed to add product:', error);
-      alert('Failed to add product');
+      console.error("Failed to add product:", error.response?.data || error.message);
+      alert("Failed to add product");
     }
   };
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -135,6 +160,15 @@ const CreateProduct = ({ isOpen, onClose, refresh }) => {
                     </option>
                   ))}
                 </select>
+              </label>
+              <label className="block w-full p-1">
+                <span className="text-gray-700">Logo</span>
+                <input
+        type="file"
+        name="product_logo"
+        onChange={(e) => setFormData({ ...formData, product_logo: e.target.files[0] })}
+        required
+      />
               </label>
             <button
               type="submit"

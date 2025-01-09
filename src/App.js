@@ -10,6 +10,8 @@ import CatalogueList from "./pages/userPages/CatalogueList";
 import CategoryList from "./pages/userPages/CategoryList";
 import ProductList from "./pages/userPages/ProductList";
 import { useState } from "react";
+import AllProductList from "./pages/userPages/AllProductList";
+import AllCategoryList from "./pages/userPages/AllCategoryList";
 
 const Layout = () => {
   const [sideMenuIsExpand, setSideMenuIsExpand] = useState(false);
@@ -59,6 +61,14 @@ const router = createBrowserRouter([
       {
         path: "/category_products",
         element: <ProductList />,
+      },
+      {
+        path: "/all_product",
+        element: <AllProductList />,
+      },
+      {
+        path: "/all_category",
+        element: <AllCategoryList />,
       },
     ],
   },

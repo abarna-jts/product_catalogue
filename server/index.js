@@ -19,6 +19,7 @@ app.use("/server/catalogue", catalogueRoutes);
 app.use("/server/dashboard", dashboardRoutes);
 app.use("/server/category", categoryRoutes);
 app.use("/server/product", productRoutes);
+app.use('/uploads', express.static('uploads'));
 
 app.listen(8800, () => {
   console.log("Server connected on port 8800");
